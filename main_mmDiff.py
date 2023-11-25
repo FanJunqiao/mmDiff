@@ -8,7 +8,7 @@ import os
 import torch
 import numpy as np
 
-from runners.diffpose_frame import Diffpose
+from runners.mmDiff_frame import Diffpose
 
 
 torch.set_printoptions(sci_mode=False)
