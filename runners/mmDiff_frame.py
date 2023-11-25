@@ -13,7 +13,7 @@ import torch.backends.cudnn as cudnn
 
 
 from models.gcnpose import GCNpose, adj_mx_from_edges
-from models.gcndiff import GCNdiff, adj_mx_from_edges
+from models.mmDiff import GCNdiff, adj_mx_from_edges
 from models.ema import EMAHelper
 
 from common.utils import *
