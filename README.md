@@ -43,15 +43,15 @@ The fundamental model design can be found in `models/mmDiff.py`.
 We provide the pre-trained diffusion model [ckpt_71.pth](https://www.dropbox.com/scl/fo/xqs7viqn6bjlolmu0qsjj/h?rlkey=hleuxio64kp43b5yx75lsszow&dl=0). To evaluate it, put it into the `./checkpoint` directory and run:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python main_diffpose_frame.py \
---config human36m_diffpose_uvxyz_cpn.yml --batch_size 1024 \
---model_pose_path checkpoints/gcn_xyz_cpn.pth \
---model_diff_path checkpoints/diffpose_uvxyz_cpn.pth \
---doc t_human36m_diffpose_uvxyz_cpn --exp exp --ni \
->exp/t_human36m_diffpose_uvxyz_cpn.out 2>&1 &
+### inference with pretrain ###
+CUDA_VISIBLE_DEVICES=0 python main_mmDiff.py \
+--config mmDiff_config.yml --batch_size 512 \
+--model_diff_path checkpoints/ckpt_71.pth \ # add your pretrained model
+--doc test --exp exp --ni \
 ```
 
-We also provide the pre-trained diffusion model (with Ground truth 2D pose as input) [here](https://www.dropbox.com/sh/jhwz3ypyxtyrlzv/AABivC5oiiMdgPePxekzu6vga?dl=0). To evaluate it, put it into the `./checkpoint` directory and run:
+### Training models from scratch
+To train a model from scratch, run
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 python main_diffpose_frame.py \
