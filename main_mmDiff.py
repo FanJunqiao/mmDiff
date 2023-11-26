@@ -8,7 +8,7 @@ import os
 import torch
 import numpy as np
 
-from runners.mmDiff_frame import Diffpose
+from runners.mmDiff_frame import mmDiff
 
 
 torch.set_printoptions(sci_mode=False)
@@ -170,13 +170,12 @@ def main():
     logging.info("Exp instance id = {}".format(os.getpid()))
     
     try:
-        runner = Diffpose(args, config)
+        runner = mmDiff(args, config)
         runner.create_diffusion_model(args.model_diff_path, args.model_limb_path)
         runner.create_pose_model(args.model_pose_path)
         runner.prepare_data()
         # runner.print_param()
         if args.train:
-            # _, _ = runner.test_hyber()
             runner.train()
         else:
             _, _ = runner.test_hyber()

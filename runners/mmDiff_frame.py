@@ -23,7 +23,7 @@ from common.generators import PoseGenerator_gmm
 from common.loss import mpjpe, p_mpjpe
 
 
-class Diffpose(object):
+class mmDiff(object):
     def __init__(self, args, config, device=None):
         self.args = args
         self.config = config

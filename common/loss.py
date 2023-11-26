@@ -65,10 +65,6 @@ def p_mpjpe(predicted, target):
 
 
 def n_mpjpe(predicted, target):
-    """
-    Normalized MPJPE (scale only), adapted from:
-    https://github.com/hrhodin/UnsupervisedGeometryAwareRepresentationLearning/blob/master/losses/poses.py
-    """
     assert predicted.shape == target.shape
 
     norm_predicted = torch.mean(torch.sum(predicted ** 2, dim=3, keepdim=True), dim=2, keepdim=True)
