@@ -18,7 +18,7 @@ conda env create -f environment.yml
 ```
 
 ## Dataset
-Our datasets are based on [mmBody](https://chen3110.github.io/mmbody/index.html) and [mm-Fi](https://ntu-aiot-lab.github.io/mm-fi). We provide the pretrained mmBody dataset as [mmBody.zip](https://www.dropbox.com/scl/fo/xqs7viqn6bjlolmu0qsjj/h?rlkey=hleuxio64kp43b5yx75lsszow&dl=0). To run the code, please download all the `mmBody.zip` and extract the .npy files to the `mmBody/` folder. Meanwhile, to follow the setting of Human 3.6m dataset of human pose estimation, please download the `pose_format.zip` and extract it to the `pose_format\` folder. 
+Our datasets are based on [mmBody](https://chen3110.github.io/mmbody/index.html) and [mm-Fi](https://ntu-aiot-lab.github.io/mm-fi). We provide the pretrained mmBody dataset as [mmBody.zip](https://www.dropbox.com/scl/fo/xqs7viqn6bjlolmu0qsjj/h?rlkey=hleuxio64kp43b5yx75lsszow&dl=0). To run the code, please download all the `mmBody.zip` and extract the .npy files to the `mmBody/` folder. Meanwhile, to follow the setting of the Human 3.6m dataset of human pose estimation, please download the `pose_format.zip` and extract it to the `pose_format\` folder. 
 
 
 ## Pretrained mmDiff model
