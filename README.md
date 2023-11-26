@@ -16,6 +16,7 @@ You can create the environment via:
 ```bash
 conda env create -f environment.yml
 ```
+For manual setup, we build our environment following [P4transformer](https://github.com/hehefan/P4Transformer).
 
 ## Dataset
 We provide the pretrained mmBody dataset as [mmBody.zip](https://www.dropbox.com/scl/fo/xqs7viqn6bjlolmu0qsjj/h?rlkey=hleuxio64kp43b5yx75lsszow&dl=0). To run the code, please download all the `mmBody.zip` and extract the .npy files to the `mmBody/` folder. Meanwhile, to follow the setting of the Human 3.6m dataset of human pose estimation, please download the `pose_format.zip` and extract it to the `pose_format\` folder. 
