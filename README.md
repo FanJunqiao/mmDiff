@@ -3,8 +3,7 @@ This is the code for the paper "mmDiff: Context and Consistency Awareness for mm
 
 
 
-## Models
-The fundamental model design can be found in models/mmDiff.py
+
 
 ## Training and inference
 We provide the training and inference code in runner.sh
@@ -34,13 +33,14 @@ We provide the pretrained mmDiff parameter [here](https://www.dropbox.com/scl/fo
 ```bash
 --model_diff_path checkpoints/[name].pth \
 ```
+## Models
+The fundamental model design can be found in `models/mmDiff.py`.
 
 
+## Running experiments
+### Evaluating pre-trained models
 
-## Frame-based experiments
-### Evaluating pre-trained models for frame-based experiments
-
-We provide the pre-trained diffusion model (with CPN-dected 2D Pose as input) [here](https://www.dropbox.com/sh/jhwz3ypyxtyrlzv/AABivC5oiiMdgPePxekzu6vga?dl=0). To evaluate it, put it into the `./checkpoint` directory and run:
+We provide the pre-trained diffusion model [ckpt_71.pth](https://www.dropbox.com/scl/fo/xqs7viqn6bjlolmu0qsjj/h?rlkey=hleuxio64kp43b5yx75lsszow&dl=0). To evaluate it, put it into the `./checkpoint` directory and run:
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 python main_diffpose_frame.py \
