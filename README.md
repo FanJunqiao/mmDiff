@@ -1,11 +1,7 @@
 # mmDiff
 This is the code for the paper "mmDiff: Context and Consistency Awareness for mmWave Human Pose Estimation via Multi-Conditional Diffusion"
 
-## mmBody dataset
 
-
-## Pretrained mmDiff model
-We provide the pretrained mmDiff parameter in the following link: ... To use the pretrained model, please download all the .pth files and save them to the checkpoints/ folder. Before running the code, please specify the checkpoint path in the runner.sh shell file.
 
 ## Models
 The fundamental model design can be found in models/mmDiff.py
@@ -15,7 +11,7 @@ We provide the training and inference code in runner.sh
 
 
 
-### Environment
+## Environment
 
 The code is developed and tested under the following environment:
 
@@ -29,12 +25,17 @@ You can create the environment via:
 conda env create -f environment.yml
 ```
 
-### Dataset
-ur datasets are based on [mmBody](https://chen3110.github.io/mmbody/index.html) and [mm-Fi](https://ntu-aiot-lab.github.io/mm-fi). We provide the pretrained mmBody dataset [here]()
-We provide the preprocessed mmBody dataset in the following link: ... To run the code, please download all the .npy files and save them to the mmBody/ folder.
+## Dataset
+ur datasets are based on [mmBody](https://chen3110.github.io/mmbody/index.html) and [mm-Fi](https://ntu-aiot-lab.github.io/mm-fi). We provide the pretrained mmBody dataset as [mmBody.zip](https://www.dropbox.com/scl/fo/xqs7viqn6bjlolmu0qsjj/h?rlkey=hleuxio64kp43b5yx75lsszow&dl=0). To run the code, please download all the `mmBody.zip` and extract the .npy files to the `mmBody/` folder. Meanwhile, to follow the setting of Human 3.6m dataset of human pose estimation, please download the `pose_format.zip` and extract it to the `pose_format\` folder. 
 
-Our datasets are based on [3d-pose-baseline](https://github.com/una-dinosauria/3d-pose-baseline) and [Video3D data](https://github.com/facebookresearch/VideoPose3D). We provide the GMM format data generated from the above datasets [here](https://www.dropbox.com/sh/54lwxf9zq4lfzss/AABmpOzg31PrhxzcxmFQt3cYa?dl=0). You should put the downloaded files into the `./data` directory.
-Note that we only change the format of the Video3D data to make them compatible with our GMM-based DiffPose training strategy, and the value of the 2D pose in our dataset is the same as them.
+
+## Pretrained mmDiff model
+We provide the pretrained mmDiff parameter [here]((https://www.dropbox.com/scl/fo/xqs7viqn6bjlolmu0qsjj/h?rlkey=hleuxio64kp43b5yx75lsszow&dl=0)). Before running the code, please download the `checkpoints.zip` and extract all the .pth files to the `checkpoints/` folder. Before running the code, please specify the checkpoint path in the runner.sh shell file as: 
+```bash
+--model_diff_path checkpoints/[name].pth \
+```
+
+
 
 ## Frame-based experiments
 ### Evaluating pre-trained models for frame-based experiments
