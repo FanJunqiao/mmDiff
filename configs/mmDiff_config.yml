@@ -1,8 +1,8 @@
 data:
     dataset: "human36m"
-    dataset_path: "./data_format/data_3d_h36m.npz"
-    dataset_path_train_2d: "./data_format/data_2d_h36m_gt_gmm.npz"
-    dataset_path_test_2d: "./data_format/data_2d_h36m_cpn_ft_h36m_dbb_gmm.npz"
+    dataset_path: "./pose_format/data_3d_h36m.npz"
+    dataset_path_train_2d: "./pose_format/data_2d_h36m_gt_gmm.npz"
+    dataset_path_test_2d: "./pose_format/data_2d_h36m_cpn_ft_h36m_dbb_gmm.npz"
     num_joints: 17
     num_workers: 32
 
@@ -38,7 +38,7 @@ testing:
 optim:
     decay: 60
     optimizer: "Adam"
-    lr: 0.00002
+    lr: 0.00002n
     lr_gamma: 0.9
     eps: 0.00000001
     amsgrad: false
