@@ -9,3 +9,6 @@ We provide the pretrained mmDiff parameter in the following link: ... To use the
 
 ## Models
 The fundamental model design can be found in models/mmDiff.py
+
+# Training and inference
+We provide the training and inference code in runner.sh
