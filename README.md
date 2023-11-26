@@ -2,7 +2,7 @@
 This is the code for the paper "mmDiff: Context and Consistency Awareness for mmWave Human Pose Estimation via Multi-Conditional Diffusion"
 
 ## mmBody dataset
-We provide the preprocessed mmBody dataset in the following link: ... To run the code, please download all the .npy files and save them to the mmBody/ folder.
+
 
 ## Pretrained mmDiff model
 We provide the pretrained mmDiff parameter in the following link: ... To use the pretrained model, please download all the .pth files and save them to the checkpoints/ folder. Before running the code, please specify the checkpoint path in the runner.sh shell file.
@@ -30,6 +30,8 @@ conda env create -f environment.yml
 ```
 
 ### Dataset
+ur datasets are based on [mmBody](https://chen3110.github.io/mmbody/index.html) and [mm-Fi](https://ntu-aiot-lab.github.io/mm-fi). We provide the pretrained mmBody dataset [here]()
+We provide the preprocessed mmBody dataset in the following link: ... To run the code, please download all the .npy files and save them to the mmBody/ folder.
 
 Our datasets are based on [3d-pose-baseline](https://github.com/una-dinosauria/3d-pose-baseline) and [Video3D data](https://github.com/facebookresearch/VideoPose3D). We provide the GMM format data generated from the above datasets [here](https://www.dropbox.com/sh/54lwxf9zq4lfzss/AABmpOzg31PrhxzcxmFQt3cYa?dl=0). You should put the downloaded files into the `./data` directory.
 Note that we only change the format of the Video3D data to make them compatible with our GMM-based DiffPose training strategy, and the value of the 2D pose in our dataset is the same as them.
