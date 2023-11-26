@@ -14,30 +14,6 @@ The fundamental model design can be found in models/mmDiff.py
 We provide the training and inference code in runner.sh
 
 
-# [DiffPose: Toward More Reliable 3D Pose Estimation, CVPR2023](https://arxiv.org/abs/2211.16940)
-
-<sup>1</sup>[JIA GONG](https://scholar.google.com/citations?user=ZV-ThegAAAAJ&hl=zh-CN)\*,
-<sup>1</sup>[Lin Geng Foo](https://scholar.google.com/citations?user=BDEOhasAAAAJ&hl=en&oi=ao)\*,
-<sup>2</sup>[Zhipeng Fan](https://scholar.google.com/citations?user=5wftY7UAAAAJ&hl=en),
-<sup>3</sup>[Qiuhong Ke](https://scholar.google.com/citations?user=84qxdhsAAAAJ&hl=en&oi=ao),
-<sup>4</sup>[Hossein Rahmani](https://scholar.google.com/citations?user=zFyT_gwAAAAJ&hl=en&oi=ao),
-<sup>1</sup>[Jun Liu](https://people.sutd.edu.sg/~jun_liu/),
-
-\* equal contribution
-
-<sup>1</sup>Singapore University of Technology and Design, <sup>2</sup>New York University, <sup>3</sup>Monash University, <sup>4</sup>Lancaster University
-
-[[Paper]](https://arxiv.org/abs/2211.16940) | [[Project Page]](https://GONGJIA0208.github.io/Diffpose/) | [[SUTD-VLG Lab]](https://github.com/sutdcv)
-
-## DiffPose Model Architecture
-
-<p align="center"> <img src="./figure/Diffpose_arch.png" width="100%"> </p>
-
-## DiffPose Diffusion Process
-
-<p align="center"> <img src="./figure/Diffpose_process.png" width="100%"> </p>
-
-Our code is built on top of [DDIM](https://github.com/ermongroup/ddim).
 
 ### Environment
 
