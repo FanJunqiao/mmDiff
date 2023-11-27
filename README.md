@@ -8,8 +8,8 @@ This is the code for the paper "mmDiff: Context and Consistency Awareness for mm
 The code is developed and tested under the following environment:
 
 -   Python 3.8.2
--   PyTorch 1.7.1
--   CUDA 11.0
+-   PyTorch 1.8.1
+-   CUDA 11.6
 
 You can create the environment via:
 
