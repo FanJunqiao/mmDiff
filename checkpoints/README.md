@@ -1,1 +1,0 @@
-Download the checkpoints here.
