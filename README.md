@@ -25,14 +25,25 @@ Please follow [mmBody](https://github.com/Chen3110/mmBody) and [mmFi](https://nt
 ## Pretrained mmDiff model
 We provide the pretrained mmDiff parameter [here]. Please download and extract to `pretrained/`,
 
-## Models
-The fundamental model design can be found in `pysensing/mmwave/PC/model/hpe/mmDiff.py`.
 
 
 ## Running experiments
-### Evaluating pre-trained models
-
+### Models
+The fundamental model design can be found in `pysensing/mmwave/PC/model/hpe/mmDiff.py`.
+### Trained from scratch and evaluate
 ```bash
 python hpe.py
 ```
 
+### phase 1 training
+```python
+mmDiffRunner.phase1_train(train_dataset, test_dataset, is_train=True, is_save=True) # is_train = True means training phase 1 from scratch, is_save = True means saves the pretrained features and poses..
+```
+### phase 2 training
+```python
+mmDiffRunner.phase2_train(train_loader = None, is_train = True) # is_train = True means training phase 2 frome scratch.
+```
+### testing
+```python
+mmDiffRunner.test() # evaluating.
+```
