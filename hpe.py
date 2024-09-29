@@ -6,7 +6,7 @@ from pysensing.mmwave.PC.model.hpe.mmDiff.load_mmDiff import load_mmDiff
 
 
 if __name__ == "__main__":
-    dataset = "mmBody" # ["mmFi", "mmBody"]
+    dataset = "mmFi" # ["mmFi", "mmBody"]
     if dataset == "mmFi":
         train_dataset, test_dataset = load_hpe_dataset("MetaFi", '/home/junqiao/projects/data/MMFi_Dataset/', config=None)
         mmDiffRunner = load_mmDiff("MetaFi")

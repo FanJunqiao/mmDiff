@@ -16,8 +16,8 @@ pretrain:
     learning_rate: 0.0001
     amp: False
 
-    pretrain_model_root: "pretrained/"
-    save_data_root: "mmdata2/"
+    pretrain_model_root: "./pretrained/"
+    save_data_root: "./mmdata2/"
 
 
 
@@ -34,7 +34,7 @@ model:
     ema: True
     resamp_with_conv: True
     var_type: fixedsmall
-    pretrain_model_root: "pretrained/"
+    pretrain_model_root: "./pretrained/"
 
 diffusion:
     beta_schedule: linear

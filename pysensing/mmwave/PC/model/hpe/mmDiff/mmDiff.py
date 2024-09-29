@@ -564,7 +564,7 @@ class mmDiffRunner(object):
                 epoch_mpjpe = epoch_mpjpe / len(train_loader)
                 print('Epoch:{}, MPJPE:{:.4f},Loss:{:.9f}'.format(epoch + 1, float(epoch_mpjpe), float(epoch_loss)))
             # save model weights
-            savepath = self.config.pretrain.pretrain_model_root
+            savepath = os.path.join(self.config.pretrain.pretrain_model_root, self.dataset + "_mmDiff_phase1.pth")
             print(f'Save model at {savepath}...')
             state = {
                 'epoch': epoch,
@@ -712,7 +712,7 @@ class mmDiffRunner(object):
                         self.best_p1 = p1
                         self.best_epoch = epoch
 
-                        savepath = F"/home/junqiao/pysensing/pretrained/mmDiff_{epoch}.pth"
+                        savepath = F"./pretrained/mmDiff_{epoch}.pth"
                         print(f'Save model at {savepath}...')
                         state = {
                             'epoch': epoch,

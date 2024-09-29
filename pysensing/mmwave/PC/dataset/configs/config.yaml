@@ -30,30 +30,30 @@ cross_scene_split:
     subjects: None
     actions: all
 
-# cross_subject_split:
-#   train_dataset:
-#     split: training
-#     scenes: None
-#     subjects: [ S01, S02, S03, S04, S06, S07, S08, S09, S11, S12, S13, S14, S16, S17, S18, S19, S21, S22, S23, S24, S26, S27, S28, S29, S31, S32, S33, S34, S36, S37, S38, S39 ]
-#     actions: all
-#   val_dataset:
-#     split: validation
-#     scenes: None
-#     subjects: [ S05, S10, S15, S20, S25, S30, S35, S40 ]
-#     actions: all
-
-
 cross_subject_split:
   train_dataset:
     split: training
     scenes: None
-    subjects: [ S01, S02 ]
+    subjects: [ S01, S02, S03, S04, S06, S07, S08, S09, S11, S12, S13, S14, S16, S17, S18, S19, S21, S22, S23, S24, S26, S27, S28, S29, S31, S32, S33, S34, S36, S37, S38, S39 ]
     actions: all
   val_dataset:
     split: validation
     scenes: None
     subjects: [ S05, S10, S15, S20, S25, S30, S35, S40 ]
     actions: all
+
+
+# cross_subject_split:
+#   train_dataset:
+#     split: training
+#     scenes: None
+#     subjects: [ S01, S02 ]
+#     actions: all
+#   val_dataset:
+#     split: validation
+#     scenes: None
+#     subjects: [ S05, S10, S15, S20, S25, S30, S35, S40 ]
+#     actions: all
 
 
 manual_split:
@@ -70,7 +70,7 @@ manual_split:
 
 
 
-split_to_use: random_split
+split_to_use: cross_subject_split
 
 init_rand_seed: 0
 loader:
