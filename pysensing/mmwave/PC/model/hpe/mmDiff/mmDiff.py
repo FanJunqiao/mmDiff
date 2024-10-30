@@ -383,8 +383,8 @@ class mmDiff(nn.Module):
     def __init__(self, diff_args, diff_config, 
                  feat_model = "P4Transformer",                                  # models for differernt dataset
                  global_feat_size = 64, past_frames = 6, radar_input_c = 6,      # args for different dataset
-                 global_flag = 1, local_flag = 1, temp_flag = 1, limb_flag = 1
-                 ):
+                 global_flag = 1, local_flag = 1, temp_flag = 1, limb_flag = 1,
+                 device = None):
         super(mmDiff, self).__init__()
         ### Generate Feature Encoder ###
         if feat_model == "P4Transformer":
@@ -393,11 +393,25 @@ class mmDiff(nn.Module):
                                                 emb_relu=False,
                                                 dim=1024, depth=10, heads=8, dim_head=256,
                                                 mlp_dim=2048, num_classes=17*3, dropout1=0.0, dropout2=0.0)
+            self.input_shape = [1, 4, 5000, radar_input_c] # input radar PC shape is of [b, T, N, C]
+            self.output_shape = [[1,17,3], [1, 17, global_feat_size]] # output human pose shape is of [b, 17, 3], output human pose feature shape is of [b, 17, C]
         elif feat_model == "PointTransformer":
             self.model_feat = PointTransformerReg_feat(
                                                 input_dim = 5,
                                                 nblocks = 5,
                                                 n_p = 17)
+            self.input_shape = [1, 5, 150, radar_input_c] # input radar PC shape is of [b, T, N, C]
+            self.output_shape = [[1,17,3], [1, 17, global_feat_size]] # output human pose shape is of [b, 17, 3], output human pose feature shape is of [b, 17, C]
+        else: raise NotImplementedError("mmDiff hasn't implemented setting for the dataset or model")  
+        if device is None:
+            device = (
+                torch.device("cuda")
+                if torch.cuda.is_available()
+                else torch.device("cpu")
+            )
+        self.device = device
+
+        self.check_model_validity()         
             
         print(f"MMdiff using {feat_model} as feature extractor.")
 
@@ -451,6 +465,17 @@ class mmDiff(nn.Module):
         # currently train and test and inference do not require gt limb length
             
         return output[:, :, -3:], x_history, cemd, limb_len_pred
+    def check_model_validity(self):
+        if self.model_feat != None:
+            input = torch.rand(self.input_shape, dtype=torch.float32, device=self.device)
+            self.model_feat.to(self.device)
+            output = self.model_feat(input)
+            for i in range(2):
+                if list(output[i].size()) != self.output_shape[i]:
+                    print(f"Desired [{i}] output shape of self.model_feat is {self.output_shape[i]}, receive output shape of {list(output[i].size())}")
+                    raise NotImplementedError("Stop")
+        print("Self.model_feat vadility passes.")
+
 
 
 class mmDiffRunner(object):
@@ -479,10 +504,10 @@ class mmDiffRunner(object):
 
         if dataset == "mmBody":
             self.dataset = dataset
-            self.model = mmDiff(args, config, feat_model = "P4Transformer", global_feat_size = 64, past_frames = 6, radar_input_c = 6)
+            self.model = mmDiff(args, config, feat_model = "P4Transformer", global_feat_size = 64, past_frames = 6, radar_input_c = 6, device=device)
         elif dataset == "MetaFi":
             self.dataset = dataset
-            self.model = mmDiff(args, config, feat_model = "PointTransformer", global_feat_size = 32, past_frames = 8, radar_input_c = 5, local_flag=2, limb_flag=2)
+            self.model = mmDiff(args, config, feat_model = "PointTransformer", global_feat_size = 32, past_frames = 8, radar_input_c = 5, local_flag=2, limb_flag=2, device=device)
         self.model.to(device)
         
 
@@ -492,25 +517,28 @@ class mmDiffRunner(object):
 
         # inference step generation
         self.test_times, test_timesteps, test_num_diffusion_timesteps, stride = \
-            config.testing.test_times, config.testing.test_timesteps, config.testing.test_num_diffusion_timesteps, args.downsample
+            config.testing.test_times, config.testing.test_timesteps, config.testing.test_num_diffusion_timesteps, args["downsample"]
         try:
-            self.skip = self.args.skip
+            self.skip = self.args["skip"]
         except Exception:
             self.skip = 1
         
-        if self.args.skip_type == "uniform":
+        if self.args["skip_type"] == "uniform":
             self.skip = test_num_diffusion_timesteps // test_timesteps
             self.seq = range(0, test_num_diffusion_timesteps, self.skip)
-        elif self.args.skip_type == "quad":
+        elif self.args["skip_type"] == "quad":
             self.seq = (np.linspace(0, np.sqrt(test_num_diffusion_timesteps * 0.8), test_timesteps)** 2)
             self.seq = [int(s) for s in list(self.seq)]
         else:
             raise NotImplementedError
         
-    def phase1_train(self, train_dataset, test_dataset, is_train = False, is_save = False):
+    def phase1_train(self, train_dataset, test_dataset, model_self = None, is_train = False, is_save = False):
 
 
         # select pretrain model
+        if model_self != None:
+            self.model.model_feat = model_self
+            self.model.check_model_validity()
         model = self.model.model_feat
         model = model.to(self.device)
 
@@ -564,7 +592,7 @@ class mmDiffRunner(object):
                 epoch_mpjpe = epoch_mpjpe / len(train_loader)
                 print('Epoch:{}, MPJPE:{:.4f},Loss:{:.9f}'.format(epoch + 1, float(epoch_mpjpe), float(epoch_loss)))
             # save model weights
-            savepath = os.path.join(self.config.pretrain.pretrain_model_root, self.dataset + "_mmDiff_phase1.pth")
+            savepath = self.config.pretrain.pretrain_model_root
             print(f'Save model at {savepath}...')
             state = {
                 'epoch': epoch,
@@ -573,11 +601,17 @@ class mmDiffRunner(object):
             }
             torch.save(state, savepath)
         else:
-            pretrain_path = os.path.join(self.config.pretrain.pretrain_model_root, self.dataset + "_mmDiff_phase1.pth")
-            stat = torch.load(pretrain_path)['model_state_dict']
-            self.model.model_feat.load_state_dict(stat)
-            model = self.model.model_feat
-            print("Phase 1 use pretrained model!")
+            if model_self == None:
+                # pretrain_path = os.path.join(self.config.pretrain.pretrain_model_root, self.dataset + "_mmDiff_phase1.pth")
+                # stat = torch.load(pretrain_path)['model_state_dict']
+                PRETRAIN_ROOT = "https://pysensing.oss-ap-southeast-1.aliyuncs.com/pretrain/mmwave_pc/"
+                pretrain_url = PRETRAIN_ROOT + "HPE/" + self.dataset + "_mmDiff_phase1.pth"
+                stat = torch.hub.load_state_dict_from_url(pretrain_url)
+                self.model.model_feat.load_state_dict(stat['model_state_dict'])
+                model = self.model.model_feat
+                print("Phase 1 use pretrained model!")
+            else:
+                print("Phase 1 use self defined model!")
 
 
         
@@ -591,11 +625,11 @@ class mmDiffRunner(object):
 
     def load_pretrain_dataloader(self):
         # try:
-        # train_dataset = PoseGenerator_gmm(test=False, frames=self.config.model.past_frames, source_dir=self.config.pretrain.save_data_root)
+        train_dataset = PoseGenerator_gmm(test=False, frames=self.model.past_frames, source_dir=os.path.join(self.config.pretrain.save_data_root, self.dataset), dataset=self.dataset)
         test_dataset = PoseGenerator_gmm(test=True, frames=self.model.past_frames, source_dir=os.path.join(self.config.pretrain.save_data_root, self.dataset), dataset=self.dataset)
         # except:
         #     print("Pretrain dataset is incomplete")
-        train_loader = torch.utils.data.DataLoader(test_dataset, shuffle=True, batch_size=self.config.training.batch_size, num_workers=self.config.training.num_workers)
+        train_loader = torch.utils.data.DataLoader(train_dataset, shuffle=True, batch_size=self.config.training.batch_size, num_workers=self.config.training.num_workers)
         test_loader = torch.utils.data.DataLoader(test_dataset, shuffle=False, batch_size=self.config.training.batch_size, num_workers=self.config.training.num_workers)
 
         self.train_loader, self.test_loader = train_loader, test_loader
@@ -712,7 +746,7 @@ class mmDiffRunner(object):
                         self.best_p1 = p1
                         self.best_epoch = epoch
 
-                        savepath = F"./pretrained/mmDiff_{epoch}.pth"
+                        savepath = F"/home/junqiao/pysensing/pretrained/mmDiff_{epoch}.pth"
                         print(f'Save model at {savepath}...')
                         state = {
                             'epoch': epoch,
@@ -724,19 +758,26 @@ class mmDiffRunner(object):
                         .format(self.best_epoch, self.best_p1, epoch, p1, p2))
                 
         else:
-            pretrain_path = os.path.join(self.config.model.pretrain_model_root, self.dataset+"_mmDiff.pth")
-            stat = torch.load(pretrain_path)
-            # check parallel stat dict
-            is_stat_parallel = False
-            for k,v in stat[0].items():
-                if k[:7] == "module.":
-                    is_stat_parallel = True
-                    break
+            PRETRAIN_ROOT = "https://pysensing.oss-ap-southeast-1.aliyuncs.com/pretrain/mmwave_pc/"
+            pretrain_url = PRETRAIN_ROOT + "HPE/" + self.dataset + "_mmDiff_phase2.pth"
+            stat = torch.hub.load_state_dict_from_url(pretrain_url)
 
-            if is_stat_parallel:
-                self.model.model_diff.load_state_dict({k.replace('module.', ''): v for k, v in stat[0].items()})
-            else:
-                self.model.model_diff.load_state_dict(stat[0])
+            # pretrain_path = os.path.join(self.config.model.pretrain_model_root, self.dataset+"_mmDiff.pth")
+            # stat = torch.load(pretrain_path)
+            # check parallel stat dict
+            if type(stat) == list: # stat dict from history version
+                is_stat_parallel = False
+                for k,v in stat[0].items():
+                    if k[:7] == "module.":
+                        is_stat_parallel = True
+                        break
+
+                if is_stat_parallel:
+                    self.model.model_diff.load_state_dict({k.replace('module.', ''): v for k, v in stat[0].items()})
+                else:
+                    self.model.model_diff.load_state_dict(stat[0])
+            else: # stat dict from pysensing version
+                self.model.model_diff.load_state_dict(stat['model_state_dict'])
             # self.model.model_feat.load(stat[0])
             print("Phase 2 use pretrained model!")
 
@@ -776,7 +817,7 @@ class mmDiffRunner(object):
 
 
             # Run diffusion step
-            output_pose, _ = self.generalized_steps(self.seq, self.betas, self.args.eta, 
+            output_pose, _ = self.generalized_steps(self.seq, self.betas, self.args["eta"], 
                                                 radar, 
                                                 x_coarse = x_history[:, :, -3:], x_history = x_history, cemd = cemd)
             output_pose = output_pose[-1]            
@@ -817,7 +858,7 @@ class mmDiffRunner(object):
 
             radar = radar.repeat(self.test_times,1,1,1)
 
-            output_pose, x_history = self.generalized_steps(self.seq, self.betas, self.args.eta, 
+            output_pose, x_history = self.generalized_steps(self.seq, self.betas, self.args["eta"], 
                                                 radar, 
                                                 x_coarse = None, x_history = x_history, cemd = None)
             output_pose = output_pose[-1]            

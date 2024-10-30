@@ -1,6 +1,11 @@
 # mmDiff
-This is the code for the paper "mmDiff: Context and Consistency Awareness for mmWave Human Pose Estimation via Multi-Conditional Diffusion"
+This is the code for the paper "mmDiff: Diffusion model is a good pose estimator for RF-Vision". It implements a diffusion framework for radar PC-based human pose estimation.
 
+## Latest update (from 30/10/2024)
+-   We fix bugs in original codes, please update
+-   We provide a tutorial for running our code, which helps you uses diffsion model for mmWave radar-based projects.
+-   We provide pretrained weights in url.txt
+-   Some bugs still exists in dataset implementation, e.g. the sequence id is not considered when concatenate adjacent radar frames and pose frames. This lead to slight performance drops compared to original paper. (To be implemented)
 
 
 ## Environment
@@ -23,7 +28,9 @@ Please follow [mmBody](https://github.com/Chen3110/mmBody) and [mmFi](https://nt
 
 
 ## Pretrained mmDiff model
-We provide the pretrained mmDiff parameter [here]. Please download and extract to `pretrained/`,
+We provide the pretrained mmDiff parameter in url.txt. Please download and extract to `pretrained/`.
+When running tutorial.ipynb, the parameter can be automatically downloaded in lines, and you do not need to download by hand.
+
 
 
 

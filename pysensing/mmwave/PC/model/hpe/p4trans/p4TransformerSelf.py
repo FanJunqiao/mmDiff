@@ -16,7 +16,7 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 sys.path.append(ROOT_DIR)
 sys.path.append(os.path.join(ROOT_DIR, 'modules'))
 
-from p4trans.point_4d_convolution_v2 import *
+from p4trans.point_4d_convolution import *
 from p4trans.transformer import * # alias for models' transformer
 
 

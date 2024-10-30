@@ -2,26 +2,29 @@ import os
 import torch
 import torch.nn.functional as F
 from torch import nn
+from torch.hub import load_state_dict_from_url
 
 
 
-PRETRAIN_ROOT = "/home/junqiao/pysensing/pretrained/"
+PRETRAIN_ROOT = "https://pysensing.oss-ap-southeast-1.aliyuncs.com/pretrain/mmwave_pc/"
 PRETRAIN_DICT = {}
-PRETRAIN_DICT["mmBody"] = {"P4Transformer": "mmBody_P4Transformer1.pth", 
-                            "mmDiff": "mmBody_mmDiff.pth"}
-PRETRAIN_DICT["MetaFi"] = {"PointTransformer": "MetaFi_PointTransformer.pth", 
-                            "mmDiff": "MetaFi_mmDiff.pth"}
-PRETRAIN_DICT["radHAR"] = {"MLP": "radHAR_MLP.pth", 
-                            "LSTM": "radHAR_LSTM.pth"}
-PRETRAIN_DICT["M-Gesture"] = {"EVL_NN": "M-Gesture_EVL_NN.pth"}
+PRETRAIN_DICT["mmBody"] = {"P4Transformer": "HPE/mmBody_P4Transformer.pth", 
+                            "mmDiff_phase1": "HPE/mmBody_mmDiff_phase1.pth",
+                            "mmDiff_phase2": "HPE/mmBody_mmDiff_phase2.pth"}
+PRETRAIN_DICT["MetaFi"] = {"PointTransformer": "HPE/MetaFi_PointTransformer.pth", 
+                            "mmDiff_phase1": "HPE/MetaFi_mmDiff_phase1.pth",
+                            "mmDiff_phase2": "HPE/MetaFi_mmDiff_phase2.pth"}
 
 
 
-def load_pretrain(model, dataset_name, model_name):
+
+def load_pretrain(model, dataset_name, model_name, progress=True):
     try:
-        pretrain_path = os.path.join(PRETRAIN_ROOT + PRETRAIN_DICT[dataset_name][model_name])
-        stat = torch.load(pretrain_path)['model_state_dict']
-        model.load_state_dict(stat)
+        # pretrain_path = PRETRAIN_ROOT + PRETRAIN_DICT[dataset_name][model_name]
+        # stat = torch.load(pretrain_path)['model_state_dict']
+        pretrain_url = PRETRAIN_ROOT + PRETRAIN_DICT[dataset_name][model_name]
+        stat = load_state_dict_from_url(pretrain_url, progress=progress)
+        model.load_state_dict(stat['model_state_dict'])
         print("Use pretrained model!")
     except:
         print("No registered pretrained model!")

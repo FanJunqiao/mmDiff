@@ -2,13 +2,11 @@ from typing import Optional, Tuple,Union, Dict
 from torch import Tensor, device
 import torch
 import torch.nn as nn
-from utlis import get_intermediate_output
+from pysensing.mmwave.PC.inference.utils import get_intermediate_output
 
 
 from pysensing.mmwave.PC.dataset.har import load_har_dataset
-from pysensing.mmwave.PC.model.har import har_MLP
 from pysensing.mmwave.PC.dataset.hgr import load_hgr_dataset
-from pysensing.mmwave.PC.model.hgr import EVL_NN
 from pysensing.mmwave.PC.dataset.hpe import load_hpe_dataset
 from pysensing.mmwave.PC.model.hpe import load_hpe_model, load_hpe_pretrain
 from pysensing.mmwave.PC.inference import load_pretrain
@@ -42,8 +40,9 @@ def embedding(input: Tensor, model: nn.Module, dataset_name: str, model_name: st
         raise ValueError("Unsupported dataset. Please choose from ['radHAR', 'M-Gesture', 'mmBody', 'MetaFi'].")
 
     expected_shape = dataset_shape[dataset_name]
-    if input.shape!= expected_shape:
-        raise ValueError(f"The shape of the input audio data does not match the expected shape for dataset '{dataset_name}'.")
+    if torch.equal(torch.Tensor(input.shape), torch.Tensor(expected_shape)):
+        print("Found input shape: ", input.shape)
+        raise ValueError(f"The shape of the input PC data does not match the expected shape for dataset '{dataset_name}'.")
     
     if dataset_name == 'radHAR' and model_name == "har_MLP":
         intermediate_feature_layer = model.fc
@@ -60,6 +59,9 @@ def embedding(input: Tensor, model: nn.Module, dataset_name: str, model_name: st
     else:
         raise ValueError("Unsupported dataset. Please use ['radHAR', 'M-Gesture', 'mmBody', 'MetaFi'] and ['har_MLP', 'har_LSTM', 'EVL_NN', 'P4Transformer', 'PointTransformer'].")
 
+    if torch.is_tensor(input) == False:
+        torch.tensor(input, device=device)
+    else: input.to(device)
     model.to(device)
     feature_embedding = get_intermediate_output(model,input,intermediate_feature_layer, multi_output=multi_output)
     return feature_embedding

@@ -43,7 +43,10 @@ class MMBody(Dataset):
         self.root = root
         self.modalities = modalities
         self.normalized = normalized
-        self.scenario = test_scenario
+        if test_scenario == "all": 
+            self.scenario = ["lab1", "lab2", "furnished", "rain", "smoke", "poor_lighting", "occlusion"]
+        else: 
+            self.scenario = [test_scenario]
         self.normalized_center = [None, None, None]
         assert (split == 'train' or split == 'test')
 
@@ -83,31 +86,32 @@ class MMBody(Dataset):
 
         
         else: # Testloader
-            split_path = os.path.join(self.root, split, self.scenario)
-            for sub_path in glob.glob(os.path.join(split_path, "*")):
-                data_path_df = self._load_mesh(sub_path)
-                for modality in self.modalities:
-                    if modality == "Radar":
-                        if "Radar" in data_path_df:
-                            continue
-                        radar_path_df = self._load_radar(sub_path)
-                        data_path_df = data_path_df.set_index(['Sequence', 'Frame']).join(
-                            radar_path_df.set_index(['Sequence', 'Frame'])).reset_index(
-                            names=['Sequence', 'Frame'])
-                    elif modality == "Depth":
-                        if "Depth" in data_path_df:
-                            continue
-                        depth_path_df = self._load_depth(sub_path)
-                        data_path_df = data_path_df.set_index(['Sequence', 'Frame']).join(
-                            depth_path_df.set_index(['Sequence', 'Frame'])).reset_index(
-                            names=['Sequence', 'Frame'])
-                    elif modality == "RGB":
-                        rgb_path_df = self._load_rgb(sub_path)
-                        data_path_df = data_path_df.set_index(['Sequence', 'Frame']).join(
-                            rgb_path_df.set_index(['Sequence', 'Frame'])).reset_index(names=['Sequence', 'Frame'])
-                    else:
-                        raise(RuntimeError)
-                self.path_df = pd.concat([self.path_df, data_path_df], ignore_index=True)
+            for s in self.scenario:
+                split_path = os.path.join(self.root, split, s)
+                for sub_path in glob.glob(os.path.join(split_path, "*")):
+                    data_path_df = self._load_mesh(sub_path)
+                    for modality in self.modalities:
+                        if modality == "Radar":
+                            if "Radar" in data_path_df:
+                                continue
+                            radar_path_df = self._load_radar(sub_path)
+                            data_path_df = data_path_df.set_index(['Sequence', 'Frame']).join(
+                                radar_path_df.set_index(['Sequence', 'Frame'])).reset_index(
+                                names=['Sequence', 'Frame'])
+                        elif modality == "Depth":
+                            if "Depth" in data_path_df:
+                                continue
+                            depth_path_df = self._load_depth(sub_path)
+                            data_path_df = data_path_df.set_index(['Sequence', 'Frame']).join(
+                                depth_path_df.set_index(['Sequence', 'Frame'])).reset_index(
+                                names=['Sequence', 'Frame'])
+                        elif modality == "RGB":
+                            rgb_path_df = self._load_rgb(sub_path)
+                            data_path_df = data_path_df.set_index(['Sequence', 'Frame']).join(
+                                rgb_path_df.set_index(['Sequence', 'Frame'])).reset_index(names=['Sequence', 'Frame'])
+                        else:
+                            raise(RuntimeError)
+                    self.path_df = pd.concat([self.path_df, data_path_df], ignore_index=True)
 
 
 
@@ -654,12 +658,12 @@ def load_hpe_dataset(dataset, root, config = None):
         train_dataset = MMBody(root, split='train', normalized=True,
                                      test_scenario="train", modalities=["Radar"])
         test_dataset = MMBody(root, split='test', normalized=True,
-                                    test_scenario="rain", modalities=["Radar"])
+                                    test_scenario="all", modalities=["Radar"]) # can select lab1, lab2, rain...
 
     elif dataset == 'MetaFi':
         if config == None:
-            print("No config file") 
-            with open('pysensing/mmwave/PC/dataset/configs/config.yaml', 'r') as fd:
+            print("Using default config file.") 
+            with open('pysensing/mmwave/PC/dataset/hpe_config/MetaFi.yaml', 'r') as fd:
                 config = yaml.load(fd, Loader=yaml.FullLoader)
         print('using dataset: MetaFi DATA')
         train_dataset = MetaFi_Dataset(root, config, split="training")

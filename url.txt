@@ -1,0 +1,6 @@
+https://pysensing.oss-ap-southeast-1.aliyuncs.com/pretrain/mmwave_pc/HPE/MetaFi_PointTransformer.pth
+https://pysensing.oss-ap-southeast-1.aliyuncs.com/pretrain/mmwave_pc/HPE/MetaFi_mmDiff_phase1.pth
+https://pysensing.oss-ap-southeast-1.aliyuncs.com/pretrain/mmwave_pc/HPE/MetaFi_mmDiff_phase2.pth
+https://pysensing.oss-ap-southeast-1.aliyuncs.com/pretrain/mmwave_pc/HPE/mmBody_P4Transformer.pth
+https://pysensing.oss-ap-southeast-1.aliyuncs.com/pretrain/mmwave_pc/HPE/mmBody_mmDiff_phase1.pth
+https://pysensing.oss-ap-southeast-1.aliyuncs.com/pretrain/mmwave_pc/HPE/mmBody_mmDiff_phase2.pth

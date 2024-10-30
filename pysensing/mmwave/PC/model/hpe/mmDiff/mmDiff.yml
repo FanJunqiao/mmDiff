@@ -8,7 +8,7 @@ data:
 
 pretrain:
     batch_size: 16
-    n_epochs: 1
+    n_epochs: 5
     num_workers: 16
 
     gradient_clipping: 1.0
@@ -16,8 +16,8 @@ pretrain:
     learning_rate: 0.0001
     amp: False
 
-    pretrain_model_root: "./pretrained/"
-    save_data_root: "./mmdata2/"
+    pretrain_model_root: "/home/junqiao/pysensing_local/pretrained/"
+    save_data_root: "/home/junqiao/pysensing_local/mmdata2"
 
 
 
@@ -34,7 +34,7 @@ model:
     ema: True
     resamp_with_conv: True
     var_type: fixedsmall
-    pretrain_model_root: "./pretrained/"
+    pretrain_model_root: "/home/junqiao/pysensing_local/pretrained/"
 
 diffusion:
     beta_schedule: linear

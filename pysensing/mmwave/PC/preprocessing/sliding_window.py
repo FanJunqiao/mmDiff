@@ -33,9 +33,9 @@ def sliding_window(index_type, frames_together, sliding, input_path = None, fram
     """
     def sliding_window_file(frames_together, sliding, input_path = None, frame = None, identifier = None):
         radar_path = input_path
-        path_list = []
-        for i in range(frames_together):
-            path = radar_path.replace(str(frame), str(frame - (frames_together-1-i)*sliding))
+        path_list = [radar_path]
+        for i in range(frames_together-1):
+            path = radar_path.replace(str(frame), str(frame - (frames_together-i)*sliding))
             if os.path.exists(path) == False: path = radar_path.replace(identifier+str(frame), identifier+str(frame+i*sliding))
             path_list.append(path)
         return path_list

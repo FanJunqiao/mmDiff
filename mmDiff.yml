@@ -43,9 +43,9 @@ diffusion:
     num_diffusion_timesteps: 51
 
 training:
-    batch_size: 128
+    batch_size: 512
     n_epochs: 100
-    num_workers: 16
+    num_workers: 4
 
 testing:
     test_times: 1
@@ -55,7 +55,7 @@ testing:
 optim:
     decay: 60
     optimizer: "Adam"
-    lr: 0.00002
+    lr: 0.0002
     lr_gamma: 0.9
     eps: 0.00000001
     amsgrad: false

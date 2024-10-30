@@ -83,7 +83,7 @@ class PointTransformerReg(nn.Module):
             b, t, n, c = x.shape
             x = x = x.view(b, t*n, c)
         points, _ = self.backbone(x)
-        joint_embedding =  self.joint_posembeds_vector # torch.rand(size = (points.size()[0], self.n_p, points.size()[2])).cuda() +
+        joint_embedding =  self.joint_posembeds_vector.expand(b, -1, -1) # torch.rand(size = (points.size()[0], self.n_p, points.size()[2])).cuda() +
         embedding = torch.cat([joint_embedding, points], dim=1)
         output = self.transformer(embedding)[:, :self.n_p, :]
 
