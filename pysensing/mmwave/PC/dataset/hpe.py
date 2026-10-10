@@ -563,12 +563,16 @@ class MetaFi_Dataset(Dataset):
             radar_path = frame
             frame_id = radar_path.split("/")[-1]
             frame = int(frame_id[5:8])
-            radar_path_list = sliding_window(index_type="file", frames_together=5, sliding=1, input_path = radar_path, frame=frame, identifier="frame_")
+            # old version: radar_path_list = sliding_window(index_type="file", frames_together=5, sliding=1, input_path = radar_path, frame=frame, identifier="frame_")
+            # Issue: MMFi filenames use frame001.bin, without an underscore.
+            radar_path_list = sliding_window(index_type="file", frames_together=5, sliding=1, input_path = radar_path, frame=frame, identifier="frame")
             radar_data_list = []
             # current implentation
             for path in radar_path_list:
 
-                with open(radar_path, 'rb') as f:
+                # old version: with open(radar_path, 'rb') as f:
+                # Issue: read each window path instead of repeatedly reading the current frame.
+                with open(path, 'rb') as f:
                     raw_data = f.read()
                 radar_data = np.frombuffer(raw_data, dtype=np.float64)
                 radar_data = radar_data.copy().reshape(-1, 5)

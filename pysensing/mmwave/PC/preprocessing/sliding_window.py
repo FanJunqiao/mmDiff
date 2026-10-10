@@ -35,8 +35,12 @@ def sliding_window(index_type, frames_together, sliding, input_path = None, fram
         radar_path = input_path
         path_list = [radar_path]
         for i in range(frames_together-1):
-            path = radar_path.replace(str(frame), str(frame - (frames_together-i)*sliding))
-            if os.path.exists(path) == False: path = radar_path.replace(identifier+str(frame), identifier+str(frame+i*sliding))
+            # old version: path = radar_path.replace(str(frame), str(frame - (frames_together-i)*sliding))
+            # Issue: off-by-one offset and unsafe digit replacement; MMFi needs three digits, MMBody no padding.
+            path = os.path.join(os.path.dirname(radar_path), identifier + str(frame - (frames_together-1-i)*sliding).zfill(3 if identifier == "frame" else 0) + os.path.splitext(radar_path)[1])
+            # old version: if os.path.exists(path) == False: path = radar_path.replace(identifier+str(frame), identifier+str(frame+i*sliding))
+            # Issue: fallback filenames also need the correct padding; keep the original fallback frame selection.
+            if os.path.exists(path) == False: path = os.path.join(os.path.dirname(radar_path), identifier + str(frame+i*sliding).zfill(3 if identifier == "frame" else 0) + os.path.splitext(radar_path)[1])
             path_list.append(path)
         return path_list
 

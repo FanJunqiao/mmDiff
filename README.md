@@ -26,6 +26,7 @@ For manual setup, we build our environment following [P4transformer](https://git
 ## Dataset
 Please follow [mmBody](https://github.com/Chen3110/mmBody) and [mmFi](https://ntu-aiot-lab.github.io/mm-fi) for dataset setup.
 
+Fixed sliding-window off-by-one errors for MMBody and MMFi, repeated current-frame loading in MMFi, and MMFi filename zero padding (e.g., `frame001.bin`).
 
 ## Pretrained mmDiff model
 We provide the pretrained mmDiff parameter in url.txt. Please download and extract to `pretrained/`.
